@@ -1,6 +1,77 @@
 # Install-Tron-Node 安裝波場節點
 
-## 安裝
+## 用Java安裝
+
+1.安裝Java參考<a href="https://www.liquidweb.com/kb/install-java-8-on-centos-7/">這裡</a>跟<a href="https://stackoverflow.com/questions/45182717/java-home-is-set-to-an-invalid-directory">這裡</a>
+```
+yum -y update
+yum install java-1.8.0-openjdk
+java -version
+```
+
+2.設定Jave-home
+  
+  找到java路徑
+  ```
+  update-alternatives --config java
+  ```
+  
+  輸出為
+  ```
+  [root@124-219-96-45 java-tron]# update-alternatives --config java
+
+  共有 1 个提供“java”的程序。
+
+    选项    命令
+  -----------------------------------------------
+  *+ 1           java-1.8.0-openjdk.x86_64 (/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.262.b10-0.el7_8.x86_64/jre/bin/java)
+  ```
+  
+3.設定Java-home路徑 路徑取到bin之前
+```
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.262.b10-0.el7_8.x86_64/jre
+```
+
+4.開始安裝波場節點 首先間建立專案資料夾
+```
+mkdir -p  /project/tron/
+```
+
+5.下载java tron
+```
+cd   /project/tron/
+git clone -b master https://github.com/tronprotocol/java-tron.git
+```
+
+6.編譯java-tron項目
+```
+cd ./java-tron 
+./gradlew build
+```
+
+7.啟動節點 
+
+  全節點
+  ```
+  nohup java -Xmx6g -XX:+HeapDumpOnOutOfMemoryError -jar FullNode.jar  -c main_net_config.conf
+  ```
+  
+  超級節點
+  ```
+  nohup java  -XX:+UseConcMarkSweepGC -jar FullNode.jar  -p  private key --witness -c main_net_config.conf
+  ```
+
+  如果輸出錯誤如下
+  ```
+  nohup: 忽略输入并把输出追加到"nohup.out"
+  ```
+  
+  解決方法參考<a href="http://www.yayihouse.com/yayishuwu/chapter/1656">這裡</a>
+  ```
+  nohup java -jar do_iptable.jar >/dev/null 2>&1 &
+  ```
+
+## 用Docker安裝
 安裝內容參考至<a href="https://github.com/tronprotocol/java-tron">官方github</a>
 
 1.安裝docker
